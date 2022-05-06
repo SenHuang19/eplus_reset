@@ -113,7 +113,7 @@ class EmulatorSetup(object):
                     self.y[key] = self.start_time
                 else:
                     self.y[key] = self.fmu.get(key)[0]
-                # self.y_store[key].append(self.y[key])
+                self.y_store[key].append(self.y[key])
             
         # Store control inputs
         

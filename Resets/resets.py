@@ -147,7 +147,7 @@ class DatReset(Reset):
     def validate(self, measurements, config):
         self.control = config.pop('control')
         self.zone_list = list(config.keys())
-        print(config)
+#        print(config)
         for zone, zone_info in config.items():
             for name, point in zone_info.items():
                 #if point not in measurements:
@@ -180,7 +180,7 @@ class DatReset(Reset):
                 htg_signal = measurements[self.zclg[zone]]/self.rated_htg_flow[zone]
             else:
                 htg_signal = 0.0
-            print("name: {} - zone {} -- occ {} -- max_sp: {} -- zt: {} -- cps: {} -- clg: {} -- htg: {}".format(self.name, zone, self.occupancy, self.max_sp, zt, csp, clg_signal, htg_signal))
+#            print("name: {} - zone {} -- occ {} -- max_sp: {} -- zt: {} -- cps: {} -- clg: {} -- htg: {}".format(self.name, zone, self.occupancy, self.max_sp, zt, csp, clg_signal, htg_signal))
             if htg_signal == 0 and clg_signal > self.clg_request_thr:
                 if zt - csp > self.request2:
                     temp = 3
@@ -194,7 +194,7 @@ class DatReset(Reset):
                     temp = 2
                 htg_requests += temp + 1
         _requests = max(0, clg_requests - htg_requests)
-        print("request: {} -- temp: {}".format(_requests, temp))
+#        print("request: {} -- temp: {}".format(_requests, temp))
         return _requests
 
     def update(self, measurements):
@@ -272,7 +272,7 @@ class ChwReset(Reset):
     def check_requests(self, measurements, zt=None):
         clg_requests = 0
         temp = 0
-        print(self.rated_clg_flow)
+#        print(self.rated_clg_flow)
         for device in self.device_list:
             temp = 0
             sat = measurements[self.sat[device]]
@@ -282,7 +282,7 @@ class ChwReset(Reset):
                 clg_signal = clg_signal/self.rated_clg_flow[device]
             else:
                 clg_signal = 0.0
-            print("name: {} - device {} -- occ {} -- max_sp: {} -- sat: {} -- sat_sp: {} -- clg: {}".format(self.name, device, self.occupancy, self.max_sp, sat, sat_sp, clg_signal))
+#            print("name: {} - device {} -- occ {} -- max_sp: {} -- sat: {} -- sat_sp: {} -- clg: {}".format(self.name, device, self.occupancy, self.max_sp, sat, sat_sp, clg_signal))
             if clg_signal > self.clg_request_thr:
                 if sat - sat_sp > self.request2:
                     temp = 3
@@ -290,7 +290,7 @@ class ChwReset(Reset):
                     temp = 2
                 clg_requests += temp + 1
         _requests = clg_requests
-        print("request: {} -- temp: {}".format(_requests, temp))
+#        print("request: {} -- temp: {}".format(_requests, temp))
         return _requests
 
     def update(self, measurements):

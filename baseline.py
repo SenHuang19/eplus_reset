@@ -39,16 +39,16 @@ def main(config):
         oat = 21.11
         for i in range(int((int(config['end_time'])-int(config['start_time']))/int(config['step']))):
             # Adjust u based on your ML method
-            if i % 10 and y and resets and numiter == 0:
-                for cls in resets:
-                    cls.update(y)
-                    r = cls.check_requests(y)
-                    cls.reset(r)
-                    u[cls.control] = cls.current_sp
-                    print("Control: {}".format(u))
+            # if i % 10 and y and resets and numiter == 0:
+                # for cls in resets:
+                    # cls.update(y)
+                    # r = cls.check_requests(y)
+                    # cls.reset(r)
+                    # u[cls.control] = cls.current_sp
+# #                    print("Control: {}".format(u))
             y = case.advance(u)
-        # print('\nTest case complete. Time: {:.1f} mins'.format((time.time()-stime)/60))
-        print(case.get_results()['y']['PCWPum'])
+
+        # print(case.get_results()['y']['PCWPum'])
         y = pd.DataFrame.from_dict(case.get_results()['y'])
         y.to_csv('result_{}_{}.csv'.format(config['name'], numiter))
         u = pd.DataFrame.from_dict(case.get_results()['u'])
@@ -58,7 +58,7 @@ def main(config):
 if __name__ == '__main__':
 
     config={
-        'fmupath':"LargeOffice_El_Paso.fmu",
+        'fmupath':"LargeOffice_tampa.fmu",
         'start_time':0*86400,
         'end_time':365*86400,
         'step': 60,

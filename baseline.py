@@ -26,7 +26,7 @@ def main(config):
         case.step = config['step']
         measurements = case.get_measurements()
         print(measurements)
-        with open("run.config") as f:
+        with open("../run.config") as f:
             config_reset = json.load(f)
         resets = reset.setup_resets(config_reset, measurements)
         u = {}
@@ -50,23 +50,43 @@ def main(config):
 
         # print(case.get_results()['y']['PCWPum'])
         y = pd.DataFrame.from_dict(case.get_results()['y'])
-        y.to_csv('result_{}_{}.csv'.format(config['name'], numiter))
+        y.to_csv('result_{}_{}_{}_baseline.csv'.format(config['name'], numiter, config['location']))
         u = pd.DataFrame.from_dict(case.get_results()['u'])
-        u.to_csv('input_{}_{}.csv'.format(config['name'], numiter))
-
-
+        u.to_csv('input_{}_{}_{}_baseline.csv'.format(config['name'], numiter, config['location']))
+    
 if __name__ == '__main__':
 
-    config={
-        'fmupath':"LargeOffice_tampa.fmu",
-        'start_time':0*86400,
-        'end_time':365*86400,
-        'step': 60,
-        'default':{
-            'SupCHWTSet':6.7,
-            'SupTSetBot':12.88,
-            'SupTSetMid':12.88,
-            'SupTSetTop':12.88
+    for a in range(6):
+    
+        if (a == 0):
+            location="atlanta"
+        elif (a==1):
+            location="El_Paso"
+        elif (a==2):
+            location="newyork"
+        elif (a==3):
+            location="sandiego"
+        elif (a==4):
+            location="seattle"
+        else :
+            location="tampa"
+            
+        fmuname = "../LargeOffice_"+location+".fmu"
+                
+        config={  
+            'fmupath':fmuname,
+            'location':location,
+            'start_time':0*86400,
+            'end_time':365*86400,
+            'step': 60,
+            'default':{
+                'SupCHWTSet':6.7,
+                'SupTSetBot':12.88,
+                'SupTSetMid':12.88,
+                'SupTSetTop':12.88
+            }
         }
-    }
-    main(config)
+        os.mkdir('baseline_'+location)
+        os.chdir('baseline_'+location)
+        main(config)
+        os.chdir('../')

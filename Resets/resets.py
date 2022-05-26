@@ -33,6 +33,7 @@ def setup_resets(config, measurements):
             continue
     return resets
 
+
 def factory(classname):
     base_module = "Resets.resets"
     module = importlib.import_module(base_module)
@@ -139,6 +140,8 @@ class DatReset(Reset):
         self.zhtg = {}
         self.rated_htg_flow = {}
         self.zone_list = []
+        self.zone_clg_req = {}
+        self.zone_htg_req = {}
         self.control = None
         self.validate(measurements, config)
         self.max_sat_bounds = np.linspace(18.34, 12.78, 100)
@@ -147,7 +150,8 @@ class DatReset(Reset):
     def validate(self, measurements, config):
         self.control = config.pop('control')
         self.zone_list = list(config.keys())
-#        print(config)
+        self.zone_clg_req = dict.fromkeys(self.zone_list, False)
+        self.zone_htg_req = dict.fromkeys(self.zone_list, False)
         for zone, zone_info in config.items():
             for name, point in zone_info.items():
                 #if point not in measurements:
@@ -166,10 +170,40 @@ class DatReset(Reset):
                     print(point)
                     self.rated_htg_flow[zone] = point
 
-    def check_requests(self, measurements):
+    def generate_clg_request(self, zone_name, clg_signal, zt, csp):
+        clg_requests = 0
+        if zt - csp > self.request2:
+            clg_requests = 3
+        elif zt - csp > self.request1:
+            clg_requests = 2
+        elif clg_signal > self.clg_request_thr:
+            clg_requests = 1
+            self.zone_clg_req[zone_name] = True
+        elif self.zone_clg_req[zone_name] and clg_signal > self.clg_request_thr - 10.0:
+            clg_requests = 1
+        else:
+            self.zone_clg_req[zone_name] = False
+        return clg_requests
+
+    def generate_htg_request(self, zone_name, htg_signal, zt, hsp):
+        htg_requests = 0
+        if hsp - zt > self.request2:
+            htg_requests = 3
+        elif hsp - zt > self.request1:
+            htg_requests = 2
+        elif htg_signal > self.htg_request_thr:
+            htg_requests = 1
+            self.zone_htg_req[zone_name] = True
+        elif self.zone_htg_req[zone_name] and htg_signal > self.htg_request_thr - 10.0:
+            htg_requests = 1
+        else:
+            self.zone_htg_req[zone_name] = False
+        return htg_requests
+
+    def check_requests(self, measurements, i):
         clg_requests = 0
         htg_requests = 0
-        temp = 0
+
         for zone in self.zone_list:
             temp = 0
             zt = measurements[self.zt[zone]]
@@ -180,21 +214,14 @@ class DatReset(Reset):
                 htg_signal = measurements[self.zclg[zone]]/self.rated_htg_flow[zone]
             else:
                 htg_signal = 0.0
-#            print("name: {} - zone {} -- occ {} -- max_sp: {} -- zt: {} -- cps: {} -- clg: {} -- htg: {}".format(self.name, zone, self.occupancy, self.max_sp, zt, csp, clg_signal, htg_signal))
-            if htg_signal == 0 and clg_signal > self.clg_request_thr:
-                if zt - csp > self.request2:
-                    temp = 3
-                elif zt - csp > self.request1:
-                    temp = 2
-                clg_requests += temp + 1
-            elif htg_signal > self.htg_request_thr:
-                if hsp - zt > self.request2:
-                    temp = 3
-                elif hsp - zt > self.request1:
-                    temp = 2
-                htg_requests += temp + 1
+            print("name: {} - zone {} -- occ {} -- max_sp: {} -- zt: {} -- cps: {} -- clg: {} -- htg: {}".format(self.name, zone, self.occupancy, self.max_sp, zt, csp, clg_signal, htg_signal))
+            clg_temp = self.generate_clg_request(zone, clg_signal, zt, csp)
+            htg_temp = self.generate_htg_request(zone, htg_signal, zt, hsp)
+
+            clg_requests += clg_temp + 1
+            htg_requests += htg_temp + 1
         _requests = max(0, clg_requests - htg_requests)
-#        print("request: {} -- temp: {}".format(_requests, temp))
+        print("request: {} -- : {}".format(_requests, temp))
         return _requests
 
     def update(self, measurements):
@@ -250,12 +277,14 @@ class ChwReset(Reset):
         self.device_list = []
         self.control = None
         self.validate(measurements, config)
+        self.device_clg_req = {}
         self.max_chw_bounds = np.linspace(10, 6.67, 100)
         self.oat_bounds = np.linspace(oat_low, oat_high, 100)
 
     def validate(self, measurements, config):
         self.control = config.pop('control')
         self.device_list = list(config.keys())
+        self.device_clg_req = dict.fromkeys(self.device_list, False)
         for device, device_info in config.items():
             for name, point in device_info.items():
                 #if point not in measurements:
@@ -269,12 +298,25 @@ class ChwReset(Reset):
                 elif name == "rated_clg_flow":
                     self.rated_clg_flow[device] = point
 
+    def generate_clg_requests(self, device_name, clg_signal, sat, sat_sp):
+        clg_requests = 0
+        if sat - sat_sp > self.request2:
+            clg_requests = 3
+        elif sat - sat_sp > self.request1:
+            clg_requests = 2
+        elif clg_signal > self.clg_request_thr:
+            clg_requests = 1
+            self.device_clg_req[device_name] = True
+        elif self.device_clg_req[device_name] and clg_signal > self.clg_request_thr - 10.0:
+            clg_requests = 1
+        else:
+            self.device_clg_req[device_name] = False
+        return clg_requests
+
     def check_requests(self, measurements, zt=None):
         clg_requests = 0
-        temp = 0
-#        print(self.rated_clg_flow)
         for device in self.device_list:
-            temp = 0
+            clg_temp = 0
             sat = measurements[self.sat[device]]
             sat_sp = measurements[self.sat_sp[device]]
             clg_signal = measurements[self.clg_signal[device]]
@@ -282,15 +324,13 @@ class ChwReset(Reset):
                 clg_signal = clg_signal/self.rated_clg_flow[device]
             else:
                 clg_signal = 0.0
-#            print("name: {} - device {} -- occ {} -- max_sp: {} -- sat: {} -- sat_sp: {} -- clg: {}".format(self.name, device, self.occupancy, self.max_sp, sat, sat_sp, clg_signal))
-            if clg_signal > self.clg_request_thr:
-                if sat - sat_sp > self.request2:
-                    temp = 3
-                elif sat - sat_sp > self.request1:
-                    temp = 2
-                clg_requests += temp + 1
+
+            print("name: {} - device {} -- occ {} -- max_sp: {} -- sat: {} -- sat_sp: {} -- clg: {}".format(self.name, device, self.occupancy, self.max_sp, sat, sat_sp, clg_signal))
+            clg_temp = self.generate_clg_requests(device, clg_signal, sat, sat_sp)
+            print("AHU: {} -- requests: {}".format(device, clg_temp))
+            clg_requests += clg_temp + 1
         _requests = clg_requests
-#        print("request: {} -- temp: {}".format(_requests, temp))
+        print("total requests: {}".format(_requests))
         return _requests
 
     def update(self, measurements):

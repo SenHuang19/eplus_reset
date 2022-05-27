@@ -43,7 +43,13 @@ RUN ["ln", "-s", "/usr/local/EnergyPlus-8-5-0/Energy+.idd", "/usr/local/Energy+.
 
 RUN pip install --user pandas
 
+RUN pip install --user matplotlib
+
 ADD Resets /home/developer/fmu/Resets
+
+ADD reset_default_results /home/developer/fmu/reset_default_results
+
+ADD baseline_results /home/developer/fmu/baseline_results
 
 ADD configs /home/developer/fmu/configs
 

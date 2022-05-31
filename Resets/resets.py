@@ -277,7 +277,7 @@ class ChwReset(Reset):
         self.device_list = []
         self.control = None
         self.validate(measurements, config)
-        self.device_clg_req = {}
+        #self.device_clg_req = {}
         self.max_chw_bounds = np.linspace(10, 6.67, 100)
         self.oat_bounds = np.linspace(oat_low, oat_high, 100)
 

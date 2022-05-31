@@ -276,6 +276,7 @@ def plot_main(loc):
     plt.xticks([2], ['total energy'])
     plt.xlim([0,6])
     plt.savefig('total_energy.jpg', dpi = 300, bbox_inches='tight')
+    plt.close()
     
     plt.figure(2)
     plt.bar(1, fanTotb, edgecolor='k', color = 'g', label='fan')
@@ -295,7 +296,7 @@ def plot_main(loc):
     plt.xticks([2, 6, 10], ['fan', 'cooling', 'heating'])
     plt.xlim([0,12])
     plt.savefig('energy_breakdown.jpg', dpi = 300, bbox_inches='tight')
-    
+    plt.close()
     # t = results[:,1]
     
     # def hravg(t,y,i1,i2):

@@ -42,7 +42,7 @@ def main(config):
             if i % 10 and y and resets and numiter == 0:
                 for cls in resets:
                     cls.update(y)
-                    r = cls.check_requests(y)
+                    r = cls.check_requests(y, i)
                     cls.reset(r)
                     u[cls.control] = cls.current_sp
 #                    print("Control: {}".format(u))
@@ -91,10 +91,10 @@ if __name__ == '__main__':
         with open('run.config', 'r') as f:
             data = f.readlines()
         
-        data[2] = '       "dat1": "../configs/'+location+'/floor1_dat_reset.config",\n'
-        data[3] = '       "dat2": "../configs/'+location+'/floor2_dat_reset.config",\n'
-        data[4] = '       "dat3": "../configs/'+location+'/floor3_dat_reset.config",\n'
-        data[5] = '       "chws": "../configs/'+location+'/chw_reset.config"\n'
+        data[2] = '       "dat1": "../configs/'+location+'/floor1_dat_reset_default.config",\n'
+        data[3] = '       "dat2": "../configs/'+location+'/floor2_dat_reset_default.config",\n'
+        data[4] = '       "dat3": "../configs/'+location+'/floor3_dat_reset_default.config",\n'
+        data[5] = '       "chws": "../configs/'+location+'/chw_reset_default.config"\n'
 
 
         with open('run_'+location+'.config', 'w') as f:

@@ -128,7 +128,7 @@ def run(location, param):
             'iter':a+1,
             'param':param,
             'start_time':0*86400,
-            'end_time':1*86400,
+            'end_time':365*86400,
             'step': 60,
             'default':{
                 'SupCHWTSet':6.7,

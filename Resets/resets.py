@@ -218,8 +218,8 @@ class DatReset(Reset):
             clg_temp = self.generate_clg_request(zone, clg_signal, zt, csp)
             htg_temp = self.generate_htg_request(zone, htg_signal, zt, hsp)
 
-            clg_requests += clg_temp + 1
-            htg_requests += htg_temp + 1
+            clg_requests += clg_temp
+            htg_requests += htg_temp
         _requests = max(0, clg_requests - htg_requests)
         print("request: {} -- : {}".format(_requests, temp))
         return _requests
@@ -328,7 +328,7 @@ class ChwReset(Reset):
             print("name: {} - device {} -- occ {} -- max_sp: {} -- sat: {} -- sat_sp: {} -- clg: {}".format(self.name, device, self.occupancy, self.max_sp, sat, sat_sp, clg_signal))
             clg_temp = self.generate_clg_requests(device, clg_signal, sat, sat_sp)
             print("AHU: {} -- requests: {}".format(device, clg_temp))
-            clg_requests += clg_temp + 1
+            clg_requests += clg_temp
         _requests = clg_requests
         print("total requests: {}".format(_requests))
         return _requests

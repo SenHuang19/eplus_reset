@@ -179,7 +179,7 @@ class DatReset(Reset):
         elif clg_signal > self.clg_request_thr:
             clg_requests = 1
             self.zone_clg_req[zone_name] = True
-        elif self.zone_clg_req[zone_name] and clg_signal > self.clg_request_thr - 10.0:
+        elif self.zone_clg_req[zone_name] and clg_signal > self.clg_request_thr - 0.1:
             clg_requests = 1
         else:
             self.zone_clg_req[zone_name] = False
@@ -194,7 +194,7 @@ class DatReset(Reset):
         elif htg_signal > self.htg_request_thr:
             htg_requests = 1
             self.zone_htg_req[zone_name] = True
-        elif self.zone_htg_req[zone_name] and htg_signal > self.htg_request_thr - 10.0:
+        elif self.zone_htg_req[zone_name] and htg_signal > self.htg_request_thr - 0.1:
             htg_requests = 1
         else:
             self.zone_htg_req[zone_name] = False
@@ -307,7 +307,7 @@ class ChwReset(Reset):
         elif clg_signal > self.clg_request_thr:
             clg_requests = 1
             self.device_clg_req[device_name] = True
-        elif self.device_clg_req[device_name] and clg_signal > self.clg_request_thr - 10.0:
+        elif self.device_clg_req[device_name] and clg_signal > self.clg_request_thr - 0.1:
             clg_requests = 1
         else:
             self.device_clg_req[device_name] = False

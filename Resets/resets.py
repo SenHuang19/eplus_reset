@@ -211,7 +211,7 @@ class DatReset(Reset):
             hsp = measurements[self.hsp[zone]]
             clg_signal = measurements[self.zclg[zone]]
             if self.rated_htg_flow[zone]:
-                htg_signal = measurements[self.zclg[zone]]/self.rated_htg_flow[zone]
+                htg_signal = measurements[self.zhtg[zone]]/self.rated_htg_flow[zone]
             else:
                 htg_signal = 0.0
             print("name: {} - zone {} -- occ {} -- max_sp: {} -- zt: {} -- cps: {} -- clg: {} -- htg: {}".format(self.name, zone, self.occupancy, self.max_sp, zt, csp, clg_signal, htg_signal))

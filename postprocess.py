@@ -274,6 +274,13 @@ def plot_main(loc):
     T3rb = results_rb[:,10]
     T4rb = results_rb[:,11]
     
+    totb = fanTotb+cooTotb+heaTotb
+    totrb = fanTotrb+cooTotrb+heaTotrb
+    tot = fanTot+cooTot+heaTot
+    
+    savb = (totb-tot)/totb
+    savrb = (totrb-tot)/totrb
+    
     plt.figure(1)
     # plt.bar(1, fanTotb, edgecolor='k', color = 'g', label='fan')
     # plt.bar(2, fanTot, edgecolor='k', color = 'g', hatch='///')
@@ -291,6 +298,7 @@ def plot_main(loc):
     plt.ylabel('Energy (GJ)')
     plt.xticks([2], ['total energy'])
     plt.xlim([0,6])
+    plt.title('Annual Energy Savings of %.2f relative to baseline and %.2f relative to default reset' %(savb,savrb))
     plt.savefig('total_energy.jpg', dpi = 300, bbox_inches='tight')
     plt.close()
     

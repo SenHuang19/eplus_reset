@@ -2,6 +2,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import csv
 
+#def load_results(loc):
 def plot_main(loc):
     
     results_rb = np.zeros((525601,110))
@@ -43,7 +44,22 @@ def plot_main(loc):
                 results[a,:] = row[:]
                 a=a+1
     
+    # with open('./reset_default_results_update/reset_'+loc+'/result_0_0_'+loc+'.csv', 'r') as csvfile:
+    #     plots = csv.reader(csvfile, delimiter=',')
+    #     a=0
+    #     for row in plots:
+    #         if firstline:
+    #             firstline = False
+    #         else:
+    #             results[a,:] = row[:]
+    #             a=a+1
+                
+#    return results, results_base, results_rb
+                
+    
     #=============================================================================
+ 
+#def plot_main(loc, results, results_base, results_rb):
     
     if (loc=='seattle'):
         a = 2
@@ -258,6 +274,13 @@ def plot_main(loc):
     T3rb = results_rb[:,10]
     T4rb = results_rb[:,11]
     
+    totb = fanTotb+cooTotb+heaTotb
+    totrb = fanTotrb+cooTotrb+heaTotrb
+    tot = fanTot+cooTot+heaTot
+    
+    savb = (totb-tot)/totb
+    savrb = (totrb-tot)/totrb
+    
     plt.figure(1)
     # plt.bar(1, fanTotb, edgecolor='k', color = 'g', label='fan')
     # plt.bar(2, fanTot, edgecolor='k', color = 'g', hatch='///')
@@ -275,6 +298,7 @@ def plot_main(loc):
     plt.ylabel('Energy (GJ)')
     plt.xticks([2], ['total energy'])
     plt.xlim([0,6])
+    plt.title('Annual Energy Savings of %.2f relative to baseline and %.2f relative to default reset' %(savb,savrb))
     plt.savefig('total_energy.jpg', dpi = 300, bbox_inches='tight')
     plt.close()
     
@@ -297,6 +321,7 @@ def plot_main(loc):
     plt.xlim([0,12])
     plt.savefig('energy_breakdown.jpg', dpi = 300, bbox_inches='tight')
     plt.close()
+    
     # t = results[:,1]
     
     # def hravg(t,y,i1,i2):
@@ -330,7 +355,7 @@ def plot_main(loc):
     
     # avgHea = hravg(t,heaCom,i1,i2)
     # avgHeab = hravg(t,heaComb,i1,i2)
-    # plt.figure(2)
+    # plt.figure(3)
     # plt.plot(avgFan/1000, 'g', label='fan_reset')
     # plt.plot(avgFanb/1000, 'go', mfc='None', label='fan_base')
     # plt.plot(avgCoo/1000, 'b', label='cooling_reset')
@@ -343,7 +368,7 @@ def plot_main(loc):
     # plt.legend(loc='best')
     # plt.xticks([0, 6, 12, 18, 24], ['12:00 am', '6:00 am', '12:00 pm', '6:00 pm', '12:00 am'])
     
-    # plt.figure(3)
+    # plt.figure(4)
     # plt.plot((t[i1:i2]-t[i1])/3600, TSupSet[i1:i2], 'k', label='TSup')
     # plt.plot((t[i1:i2]-t[i1])/3600, TSupSetb[i1:i2], 'k--')
     # plt.plot((t[i1:i2]-t[i1])/3600, TOut[i1:i2], 'g', label='TOut')
@@ -359,7 +384,7 @@ def plot_main(loc):
     # plt.legend(loc='best')
     # plt.xticks([0, 6, 12, 18, 24], ['12:00 am', '6:00 am', '12:00 pm', '6:00 pm', '12:00 am'])
     
-    # plt.figure(4)
+    # plt.figure(5)
     # plt.plot((t[i1:i2]-t[i1])/3600, mSup[i1:i2], 'k', label='reset')
     # plt.plot((t[i1:i2]-t[i1])/3600, mSupb[i1:i2], 'k--', label='baseline')
     # plt.title('Winter Day')
@@ -380,7 +405,7 @@ def plot_main(loc):
     
     # avgHea = hravg(t,heaCom,i1,i2)
     # avgHeab = hravg(t,heaComb,i1,i2)
-    # plt.figure(5)
+    # plt.figure(6)
     # plt.plot(avgFan/1000, 'g', label='fan_reset')
     # plt.plot(avgFanb/1000, 'go', mfc='None', label='fan_base')
     # plt.plot(avgCoo/1000, 'b', label='cooling_reset')
@@ -393,7 +418,7 @@ def plot_main(loc):
     # plt.legend(loc='best')
     # plt.xticks([0, 6, 12, 18, 24], ['12:00 am', '6:00 am', '12:00 pm', '6:00 pm', '12:00 am'])
     
-    # plt.figure(6)
+    # plt.figure(7)
     # plt.plot((t[i1:i2]-t[i1])/3600, TSupSet[i1:i2], 'k', label='TSup')
     # plt.plot((t[i1:i2]-t[i1])/3600, TSupSetb[i1:i2], 'k--')
     # plt.plot((t[i1:i2]-t[i1])/3600, TOut[i1:i2], 'g', label='TOut')
@@ -409,7 +434,7 @@ def plot_main(loc):
     # plt.legend(loc='best')
     # plt.xticks([0, 6, 12, 18, 24], ['12:00 am', '6:00 am', '12:00 pm', '6:00 pm', '12:00 am'])
     
-    # plt.figure(7)
+    # plt.figure(8)
     # plt.plot((t[i1:i2]-t[i1])/3600, mSup[i1:i2], 'k', label='reset')
     # plt.plot((t[i1:i2]-t[i1])/3600, mSupb[i1:i2], 'k--', label='baseline')
     # plt.title('Summer Day')
@@ -429,7 +454,7 @@ def plot_main(loc):
     
     # avgHea = hravg(t,heaCom,i1,i2)
     # avgHeab = hravg(t,heaComb,i1,i2)
-    # plt.figure(8)
+    # plt.figure(9)
     # plt.plot(avgFan/1000, 'g', label='fan_reset')
     # plt.plot(avgFanb/1000, 'go', mfc='None', label='fan_base')
     # plt.plot(avgCoo/1000, 'b', label='cooling_reset')
@@ -442,7 +467,7 @@ def plot_main(loc):
     # plt.legend(loc='best')
     # plt.xticks([0, 6, 12, 18, 24], ['12:00 am', '6:00 am', '12:00 pm', '6:00 pm', '12:00 am'])
     
-    # plt.figure(9)
+    # plt.figure(10)
     # plt.plot((t[i1:i2]-t[i1])/3600, TSupSet[i1:i2], 'k', label='TSup')
     # plt.plot((t[i1:i2]-t[i1])/3600, TSupSetb[i1:i2], 'k--')
     # plt.plot((t[i1:i2]-t[i1])/3600, TOut[i1:i2], 'g', label='TOut')
@@ -458,7 +483,7 @@ def plot_main(loc):
     # plt.legend(loc='best')
     # plt.xticks([0, 6, 12, 18, 24], ['12:00 am', '6:00 am', '12:00 pm', '6:00 pm', '12:00 am'])
     
-    # plt.figure(10)
+    # plt.figure(11)
     # plt.plot((t[i1:i2]-t[i1])/3600, mSup[i1:i2], 'k', label='reset')
     # plt.plot((t[i1:i2]-t[i1])/3600, mSupb[i1:i2], 'k--', label='baseline')
     # plt.title('Fall Day')

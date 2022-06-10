@@ -17,6 +17,7 @@ import numpy as np
 import json
 import Resets.resets as reset
 import postprocess
+import shutil
 
 def main(config):
     for numiter in range(1):
@@ -131,4 +132,6 @@ def run(location, param):
         os.chdir('reset_'+location+'_'+param+'_'+str(a+1))
         main(config)
         postprocess.plot_main(location)
+        shutil.rmtree('Output_EPExport_0')
+        shutil.rmtree('Output_EPExport_Slave')
         os.chdir('../')

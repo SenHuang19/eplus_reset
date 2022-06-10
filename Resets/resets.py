@@ -144,7 +144,7 @@ class DatReset(Reset):
         self.zone_htg_req = {}
         self.control = None
         self.validate(measurements, config)
-        self.max_sat_bounds = np.linspace(18.34, 12.78, 100)
+        self.max_sat_bounds = np.linspace(self.max_sp, self.min_sp, 100)
         self.oat_bounds = np.linspace(oat_low, oat_high, 100)
 
     def validate(self, measurements, config):
@@ -278,7 +278,7 @@ class ChwReset(Reset):
         self.control = None
         self.validate(measurements, config)
         #self.device_clg_req = {}
-        self.max_chw_bounds = np.linspace(10, 6.67, 100)
+        self.max_chw_bounds = np.linspace(self.max_sp, self.min_sp, 100)
         self.oat_bounds = np.linspace(oat_low, oat_high, 100)
 
     def validate(self, measurements, config):

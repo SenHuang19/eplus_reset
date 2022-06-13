@@ -57,7 +57,7 @@ class Reset:
         try:
             self.ignored_requests = config.pop("ignored_requests")
         except KeyError:
-            self.ignored_requests = 1
+            self.ignored_requests = 0
         self.current_sp = float(self.default_setpoint)
 
     def validate_config(self, config):

@@ -90,6 +90,7 @@ class Reset:
             sp = self.current_sp - min((_requests - self.ignored_requests) * self.respond, self.max_respond)
         else:
             sp = self.current_sp + self.trim
+        print("{} -- requests: {} -- ignored: {} -- sp: {} -- max: {}".format(self.name, _requests, self.ignored_requests, sp, self.max_sp))
         self.current_sp = min(self.max_sp, max(sp, self.min_sp))
 
 
@@ -217,7 +218,7 @@ class DatReset(Reset):
             print("name: {} - zone {} -- occ {} -- max_sp: {} -- zt: {} -- cps: {} -- clg: {} -- htg: {}".format(self.name, zone, self.occupancy, self.max_sp, zt, csp, clg_signal, htg_signal))
             clg_temp = self.generate_clg_request(zone, clg_signal, zt, csp)
             htg_temp = self.generate_htg_request(zone, htg_signal, zt, hsp)
-
+            print("{} - cooling: {} -- heating: {}".format(zone, clg_temp, htg_temp))
             clg_requests += clg_temp
             htg_requests += htg_temp
         _requests = max(0, clg_requests - htg_requests)
@@ -228,6 +229,7 @@ class DatReset(Reset):
         oat = measurements[self.oat_name]
         self.occupancy = int(measurements[self.occupancy_name])
         self.max_sp = np.interp(oat, self.oat_bounds, self.max_sat_bounds)
+        print("Maximum DAT SP: {}".format(self.max_sp))
 
 
 class ChwReset(Reset):

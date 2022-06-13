@@ -41,7 +41,7 @@ def main(config):
         oat = 21.11
         for i in range(int((int(config['end_time'])-int(config['start_time']))/int(config['step']))):
             # Adjust u based on your ML method
-            if i % 10 and y and resets and numiter == 0:
+            if not i % 5 and y and resets and numiter == 0:
                 for cls in resets:
                     cls.update(y)
                     r = cls.check_requests(y, i)
